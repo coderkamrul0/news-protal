@@ -1,7 +1,14 @@
+let fetchData = [];
+let today = []
+
+// fetch news menu
 const lodeMenu = () =>{
     const url = 'https://openapi.programming-hero.com/api/news/categories'
     fetch(url).then(res => res.json()).then(data => displayMenu(data.data))
 }
+
+
+// show news
 const displayMenu = (data) =>{
     const menuContainer = document.getElementById('menu-container')
     data.news_category.forEach(singleCategory => {
@@ -13,11 +20,21 @@ const displayMenu = (data) =>{
     })
 }
 
+
+
+// fetch category news
 const fetchCategoryNews = (category_id,category_name) => {
     const url = `https://openapi.programming-hero.com/api/news/category/${category_id}`
     fetch(url).then(res => res.json())
-    .then(data => displayNews(data.data,category_name))
+    .then(data => {
+      fetchData = data.data;
+      today = data.data;
+      displayNews(data.data,category_name)
+    })
 }
+
+
+// show category news
 const displayNews =(data,category_name)=>{
     const item = document.getElementById('item').innerText = data.length
     const category = document.getElementById('category').innerText = category_name
@@ -80,11 +97,14 @@ const displayNews =(data,category_name)=>{
 
 }
 
+
+// modal data fetch
 const modalData = (id_url) =>{
     fetch(`https://openapi.programming-hero.com/api/news/${id_url}`).then(res => res.json()).then(data => modalDataDisplay(data.data[0]))
 }
 
 
+// modal data show
 const modalDataDisplay = (data) => {
     console.log(data);
     const {rating,total_view,title,author,image_url,details} = data
@@ -132,4 +152,27 @@ const modalDataDisplay = (data) => {
   </div>
     `;
     modalContainer?.appendChild(div);
+}
+
+
+
+// show trending news
+const showTrending = () =>{
+  
+  const trendingNews = fetchData.filter(single => single.others_info.is_trending === true);
+  const category = document.getElementById('category').innerText;
+  console.log(trendingNews);
+ 
+  displayNews(fetchData,category);
+
+}
+
+// show todays pick
+const showTodaysPick = () =>{
+  
+  const todayPick = today.filter(single => single.others_info.is_todays_pick === true);
+  const category = document.getElementById('category').innerText;
+  console.log(todayPick);
+ 
+  displayNews(todayPick,category);
 }
