@@ -163,7 +163,7 @@ const showTrending = () =>{
   const category = document.getElementById('category').innerText;
   console.log(trendingNews);
  
-  displayNews(fetchData,category);
+  displayNews(trendingNews,category);
 
 }
 
